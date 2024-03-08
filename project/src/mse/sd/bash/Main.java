@@ -19,10 +19,10 @@ public class Main {
 
             // разбираем ввод пользователя
             Parser parser = new Parser(new StringSource(sb.toString()));
-            Command command = parser.parse();
+            String[] commands = parser.parse();
 
             // исполнение команды
-            command.eval();
+            // commands.eval();
 
         }
     }

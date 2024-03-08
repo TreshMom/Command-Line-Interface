@@ -1,4 +1,8 @@
 package mse.sd.bash.commands;
 
-public class Wc {
+public class Wc extends Command {
+    @Override
+    public void eval() {
+
+    }
 }

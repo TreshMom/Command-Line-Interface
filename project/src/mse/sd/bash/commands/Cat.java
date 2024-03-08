@@ -1,4 +1,8 @@
 package mse.sd.bash.commands;
 
-public class Cat {
+public class Cat extends Command {
+    @Override
+    public void eval() {
+
+    }
 }

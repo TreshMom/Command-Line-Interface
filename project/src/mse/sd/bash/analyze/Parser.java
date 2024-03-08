@@ -1,27 +1,43 @@
 package mse.sd.bash.analyze;
 
-import mse.sd.bash.commands.Command;
-import mse.sd.bash.commands.Echo;
-
+import mse.sd.bash.commands.*;
 import java.util.Map;
+import java.util.HashMap;
 
 public class Parser {
     private final CharSourse source;
     private static final char END = '\0';
     private char ch = 0xffff;
+    private static final Map<String, Command> CMD_MAP = new HashMap<>();
+
+    static {
+        CMD_MAP.put("cat", new Cat());
+        CMD_MAP.put("echo", new Echo());
+        CMD_MAP.put("exit", new Exit());
+        CMD_MAP.put("pwd", new Pwd());
+        CMD_MAP.put("wc", new Wc());
+    }
 
     public Parser(CharSourse source) {
         this.source = source;
     }
 
     // разбор строки
-    public Command parse() {
+    public String[] parse() {
         return parseInput();
     }
 
-    private Command parseInput() {
+    private String[] parseInput() {
         skipWhitespace();
-        
+        if (test(END)) {
+            throw error("No command found");
+        }
+        StringBuilder commandNameBuilder = new StringBuilder();
+        while (!test(END) && !Character.isWhitespace(ch)) {
+            commandNameBuilder.append(take());
+        }
+        String[] commands = commandNameBuilder.toString().split(" && ");
+        return commands;
     }
 
 
