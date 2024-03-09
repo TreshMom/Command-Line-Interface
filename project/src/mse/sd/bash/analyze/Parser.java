@@ -1,14 +1,21 @@
 package mse.sd.bash.analyze;
 
 import mse.sd.bash.commands.*;
+
+import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Parser {
-    private final CharSourse source;
+    private final String source;
+    private Command[] commands = null;
+    private String[][] commandsArgs = null;
     private static final char END = '\0';
     private char ch = 0xffff;
     private static final Map<String, Command> CMD_MAP = new HashMap<>();
+
+    private static final String SEP = "&&";
 
     static {
         CMD_MAP.put("cat", new Cat());
@@ -18,72 +25,71 @@ public class Parser {
         CMD_MAP.put("wc", new Wc());
     }
 
-    public Parser(CharSourse source) {
+    public String[][] getCommandsArgs()
+    {
+        return this.commandsArgs;
+    }
+
+    public Command[] getCommands()
+    {
+        return this.commands;
+    }
+
+    public Parser(String source) {
         this.source = source;
     }
 
     // разбор строки
-    public String[] parse() {
-        return parseInput();
+    public void parse() {
+        String[][] postProcessing = parseSemanticCommand(parseCommands(this.source));
+        this.commands = toCommands(postProcessing);
+        this.commandsArgs = toCommandArgs(postProcessing);
     }
 
-    private String[] parseInput() {
-        skipWhitespace();
-        if (test(END)) {
-            throw error("No command found");
-        }
-        StringBuilder commandNameBuilder = new StringBuilder();
-        while (!test(END) && !Character.isWhitespace(ch)) {
-            commandNameBuilder.append(take());
-        }
-        String[] commands = commandNameBuilder.toString().split(" && ");
-        return commands;
+    private String[] parseCommands(String inp) {
+        return Arrays.stream(inp.split(SEP))
+                .map(String::trim)
+                .map(str -> str.replaceAll("\\s+"," ")).
+                toList().toArray(new String[0]);
     }
 
-
-    // helper methods
-    private char take() {
-        final char result = ch;
-        ch = source.hasNext() ? source.next() : END;
-        return result;
+    private String[][] parseSemanticCommand(String [] inp)
+    {
+        return Arrays.stream(inp)
+                .map(str -> str.split(" "))
+                .filter(commandString ->
+                        commandString.length > 0 && !Objects.equals(commandString[0], ""))
+                .filter(commandString -> testStringIsCommand(commandString[0]))
+                .toList().toArray(new String[0][0]);
     }
 
-    private boolean test(final char expected) {
-        return ch == expected;
+    private Command[] toCommands(String[][] inp)
+    {
+        // TODO добавить передачу аргументов в eval
+        return Arrays.stream(inp)
+                .map(commandString -> CMD_MAP.get(commandString[0]))
+                .toList()
+                .toArray(new Command[0]);
     }
 
-    private boolean take(final char expected) {
-        if (test(expected)) {
-            take();
+    public String[][] toCommandArgs(String[][] inp)
+    {
+        return Arrays.stream(inp)
+                .map(str -> Arrays.copyOfRange(str,1,str.length))
+                .toList()
+                .toArray(new String[0][0]);
+    }
+
+    private boolean testStringIsCommand(String str)
+    {
+        if(CMD_MAP.containsKey(str))
+        {
             return true;
         }
-        return false;
-    }
-
-    private void expect(final char expected) {
-        if (!take(expected)) {
-            throw error("Expected '" + expected + "', found '" + ch + "'");
-        }
+        throw error("unexpected command : " + str);
     }
 
     private IllegalArgumentException error(final String message) {
-        return source.error(message);
+        return new IllegalArgumentException(message);
     }
-
-    private void expect(final String value) {
-        for (final char c : value.toCharArray()) {
-            expect(c);
-        }
-    }
-
-    private boolean eof() {
-        return take(END);
-    }
-
-    private void skipWhitespace() {
-        while (Character.isWhitespace(ch)) {
-            take();
-        }
-    }
-
 }

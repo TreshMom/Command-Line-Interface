@@ -4,6 +4,6 @@ public class Exit extends Command {
 
     @Override
     public void eval() {
-
+        System.out.println("exit");
     }
 }
