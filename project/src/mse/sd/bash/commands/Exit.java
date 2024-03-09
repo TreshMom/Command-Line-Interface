@@ -3,7 +3,7 @@ package mse.sd.bash.commands;
 public class Exit extends Command {
 
     @Override
-    public void eval() {
+    public void eval(String  fileName) {
 
     }
 }

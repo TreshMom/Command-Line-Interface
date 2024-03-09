@@ -5,8 +5,9 @@ import java.io.IOException;
 import java.util.StringTokenizer;
 import java.nio.charset.Charset;
 
-public class Wc {
-    public static void wc(String fileName) {
+public class Wc extends Command {
+    @Override
+    public void eval(String fileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             int lines = -1;
             int words = 0;
@@ -21,7 +22,7 @@ public class Wc {
 
             System.out.println("Lines: " + lines);
             System.out.println("Words: " + words);
-            System.out.println("Bytes: " + bytes);
+            System.out.println("Bytes: " + (bytes + lines));
         } catch (IOException e) {
             e.printStackTrace();
         }
