@@ -9,7 +9,7 @@ public class Wc extends Command {
     @Override
     public void eval(String fileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            int lines = -1;
+            int lines = 0;
             int words = 0;
             int bytes = 0;
 
