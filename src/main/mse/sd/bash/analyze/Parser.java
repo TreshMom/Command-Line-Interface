@@ -6,13 +6,12 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class Parser {
     private final String source;
-    private Command[] commands = null;
-    private String[][] commandsArgs = null;
-    private static final char END = '\0';
-    private char ch = 0xffff;
+    private Command[][] commands = null;
+    private String[][][] commandsArgs = null;
     private static final Map<String, Command> CMD_MAP = new HashMap<>();
 
     private static final String SEP = "&&";
@@ -25,12 +24,12 @@ public class Parser {
         CMD_MAP.put("wc", new Wc());
     }
 
-    public String[][] getCommandsArgs()
+    public String[][][] getCommandsArgs()
     {
         return this.commandsArgs;
     }
 
-    public Command[] getCommands()
+    public Command[][] getCommands()
     {
         return this.commands;
     }
@@ -40,21 +39,36 @@ public class Parser {
     }
 
     // разбор строки
-    public String[][] parse() {
-        String[][] postProcessing = parseSemanticCommand(parseCommands(this.source));
-        this.commands = toCommands(postProcessing);
+    public String[][][] parse() {
+        System.out.println(Arrays.deepToString(parseSemanticCommandByPipe(parseCommands(this.source,SEP))));
+        String[][][] postProcessing = parseSemanticCommandAll(parseSemanticCommandByPipe(parseCommands(this.source,SEP)));
+        System.out.println(Arrays.deepToString(postProcessing));
+        this.commands = toCommandsAll(postProcessing);
         this.commandsArgs = toCommandArgs(postProcessing);
         return postProcessing;
     }
 
-    private String[] parseCommands(String inp) {
-        return Arrays.stream(inp.split(SEP))
+    private String[] parseCommands(String inp, String sep) {
+        return Arrays.stream(inp.split(sep))
                 .map(String::trim)
                 .map(str -> str.replaceAll("\\s+"," ")).
                 toList().toArray(new String[0]);
     }
 
-    private String[][] parseSemanticCommand(String [] inp)
+    private String[][] parseSemanticCommandByPipe(String[] inp)
+    {
+        return Arrays.stream(inp)
+                .map(str -> parseCommands(str,"\\|"))
+                .toList().toArray(new String[0][0]);
+    }
+
+    private String[][][] parseSemanticCommandAll(String[][] inp)
+    {
+        return Arrays.stream(inp)
+                .map(this::parseSemanticCommandByOne)
+                .toList().toArray(new String[0][0][0]);
+    }
+    private String[][] parseSemanticCommandByOne(String [] inp)
     {
         return Arrays.stream(inp)
                 .map(str -> str.split(" "))
@@ -64,7 +78,16 @@ public class Parser {
                 .toList().toArray(new String[0][0]);
     }
 
-    private Command[] toCommands(String[][] inp)
+    private Command[][] toCommandsAll(String[][][] inp)
+    {
+        // TODO добавить передачу аргументов в eval
+        return Arrays.stream(inp)
+                .map(this::toCommandsByOne)
+                .toList()
+                .toArray(new Command[0][0]);
+    }
+
+    private Command[] toCommandsByOne(String[][] inp)
     {
         // TODO добавить передачу аргументов в eval
         return Arrays.stream(inp)
@@ -73,7 +96,16 @@ public class Parser {
                 .toArray(new Command[0]);
     }
 
-    public String[][] toCommandArgs(String[][] inp)
+    public String[][][] toCommandArgs(String[][][] inp)
+    {
+        return Arrays.stream(inp)
+                .map(this::toCommandArgsByOne)
+                .toList()
+                .toArray(new String[0][0][0]);
+
+    }
+
+    public String[][] toCommandArgsByOne(String[][] inp)
     {
         return Arrays.stream(inp)
                 .map(str -> Arrays.copyOfRange(str,1,str.length))

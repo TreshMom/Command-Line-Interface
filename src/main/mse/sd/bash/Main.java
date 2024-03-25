@@ -5,6 +5,7 @@ import mse.sd.bash.commands.Command;
 import mse.sd.bash.commands.Pwd;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -15,16 +16,17 @@ public class Main {
 //                "&& wc C:\Users\Ilya\IdeaProjects\SD\project\src\mse\sd\bash\commands\example.txt");
         Parser parser = new Parser(rs);
         parser.parse();
-        Command[] commands = parser.getCommands();
-        String[][] commandsArgs = parser.getCommandsArgs();
+        Command[][] commands = parser.getCommands();
+        String[][][] commandsArgs = parser.getCommandsArgs();
 
-        for (int i = 0; i < commands.length; i++) {
-            if (commandsArgs[i].length > 0) {
-                commands[i].eval(commandsArgs[i][0]);
-            } else if (commands[i] instanceof Pwd) {
-                commands[i].eval("");
-            }
-        }
+//        for (int i = 0; i < commands.length; i++) {
+//            if (commandsArgs[i].length > 0) {
+//                commands[i].eval(commandsArgs[i][0]);
+//            } else if (commands[i] instanceof Pwd) {
+//                commands[i].eval("");
+//            }
+//        }
+        System.out.println(Arrays.deepToString(commandsArgs));
         // cat, cat, echo
     }
 
