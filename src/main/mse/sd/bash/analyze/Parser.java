@@ -1,6 +1,6 @@
-package main.mse.sd.bash.analyze;
+package mse.sd.bash.analyze;
 
-import main.mse.sd.bash.commands.*;
+import mse.sd.bash.commands.*;
 
 import java.util.Arrays;
 import java.util.Map;

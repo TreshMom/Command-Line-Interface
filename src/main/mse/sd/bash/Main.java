@@ -1,8 +1,8 @@
-package main.mse.sd.bash;
+package mse.sd.bash;
 
-import main.mse.sd.bash.analyze.Parser;
-import main.mse.sd.bash.commands.Command;
-import main.mse.sd.bash.commands.Pwd;
+import mse.sd.bash.analyze.Parser;
+import mse.sd.bash.commands.Command;
+import mse.sd.bash.commands.Pwd;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -30,7 +30,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException, IllegalArgumentException {
 //        testMain();
-        while (true) {
+        boolean Flag = true;
+        while (Flag) {
             Scanner sc = new Scanner(System.in);
             try {
                 testMain(sc.nextLine());

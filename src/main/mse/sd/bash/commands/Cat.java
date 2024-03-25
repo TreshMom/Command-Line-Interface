@@ -1,4 +1,4 @@
-package main.mse.sd.bash.commands;
+package mse.sd.bash.commands;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

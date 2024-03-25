@@ -1,4 +1,4 @@
-package main.mse.sd.bash.commands;
+package mse.sd.bash.commands;
 
 public abstract class Command {
 

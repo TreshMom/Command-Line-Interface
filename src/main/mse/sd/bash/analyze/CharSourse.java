@@ -1,4 +1,4 @@
-package main.mse.sd.bash.analyze;
+package mse.sd.bash.analyze;
 
 public interface CharSourse {
     boolean hasNext();

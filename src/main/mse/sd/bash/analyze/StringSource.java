@@ -1,4 +1,4 @@
-package main.mse.sd.bash.analyze;
+package mse.sd.bash.analyze;
 
 public class StringSource implements CharSourse {
     private final String data;
