@@ -1,18 +1,41 @@
 package mse.sd.bash.commands;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class Cat extends Command {
     @Override
-    public void eval(String fileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+    public void eval(Reader reader) {
+        StringBuilder result = new StringBuilder();
+        try (BufferedReader BufReader = new BufferedReader(reader)) {
             String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+            while ((line = BufReader.readLine()) != null) {
+                result.append(line).append("\n");
+            }
+            if(nextCommand != null)
+            {
+                nextCommand.eval(new StringReader(result.toString()));
+            }
+            else
+            {
+                System.out.println(result);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+
+    }
+
+    @Override
+    public void start() {
+        try {
+            String filename = args[0];
+            eval(new FileReader(filename));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("error args");
+        }
+    }
+
+    @Override
+    public Cat getNew() {
+        return new Cat();
     }
 }

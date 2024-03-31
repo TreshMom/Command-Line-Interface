@@ -2,41 +2,37 @@ package mse.sd.bash;
 
 import mse.sd.bash.analyze.Parser;
 import mse.sd.bash.commands.Command;
+import mse.sd.bash.commands.PipeManagerCommands;
 import mse.sd.bash.commands.Pwd;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     private static void testMain(String rs) throws IOException, IllegalArgumentException {
-//        Parser parser = new Parser(
-//                "  cat ' C:\Users\Ilya\IdeaProjects\SD\project\src\mse\sd\bash\commands\example.txt'" +
-//                "&& cat C:\Users\Ilya\IdeaProjects\SD\project\src\mse\sd\bash\commands\example.txt" +
-//                "&& wc C:\Users\Ilya\IdeaProjects\SD\project\src\mse\sd\bash\commands\example.txt");
         Parser parser = new Parser(rs);
         parser.parse();
         Command[][] commands = parser.getCommands();
         String[][][] commandsArgs = parser.getCommandsArgs();
 
-//        for (int i = 0; i < commands.length; i++) {
-//            if (commandsArgs[i].length > 0) {
-//                commands[i].eval(commandsArgs[i][0]);
-//            } else if (commands[i] instanceof Pwd) {
-//                commands[i].eval("");
-//            }
-//        }
-        System.out.println(Arrays.deepToString(commandsArgs));
-        // cat, cat, echo
+        // by "&&"
+        for (int i = 0; i < commands.length; i++) {
+            PipeManagerCommands pipeManagerCommands =
+                    new PipeManagerCommands(commands[i],commandsArgs[i]);
+            pipeManagerCommands.start();
+        }
     }
 
-    public static void main(String[] args) throws IOException, IllegalArgumentException {
-//        testMain();
-        boolean Flag = true;
-        while (Flag) {
+    public static void main(String[] args) throws IllegalArgumentException {
+        while (true) {
             Scanner sc = new Scanner(System.in);
             try {
                 testMain(sc.nextLine());
+                System.out.println();
             } catch (IOException | IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
