@@ -29,6 +29,7 @@ public class Main {
 
     public static void main(String[] args) throws IllegalArgumentException {
         while (true) {
+            System.out.print(System.getProperty("user.dir") + ">");
             Scanner sc = new Scanner(System.in);
             try {
                 testMain(sc.nextLine());
