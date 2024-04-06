@@ -7,8 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class CommandParser
-{
+public class CommandParser {
     private static final Map<String, Command> CMD_MAP = new HashMap<>();
 
     static {
@@ -19,54 +18,46 @@ public class CommandParser
         CMD_MAP.put("wc", new Wc());
     }
 
-    static private boolean isCommand(String[] str)
-    {
-        if(str.length > 0)
-        {
+    static private boolean isCommand(String[] str) {
+        if (str.length > 0) {
             return CMD_MAP.containsKey(str[0]);
         }
         return false;
     }
-    static public Command parse(String[] str)
-    {
-        if(isCommand(str))
-        {
+
+    static public Command parse(String[] str) {
+        if (isCommand(str)) {
             return CMD_MAP.get(str[0]).getNew();
         }
         throw new IllegalArgumentException("unexpected command : " + Arrays.toString(str));
     }
 
-    static public Command[] parse(String[][] str)
-    {
+    static public Command[] parse(String[][] str) {
         return Arrays.stream(str)
                 .map(CommandParser::parse)
                 .toList()
                 .toArray(new Command[0]);
     }
 
-    static public Command[][] parse(String[][][] str)
-    {
+    static public Command[][] parse(String[][][] str) {
         return Arrays.stream(str)
                 .map(CommandParser::parse)
                 .toList()
                 .toArray(new Command[0][0]);
     }
 
-    static public String[] getArgs(String[] args)
-    {
-        return Arrays.copyOfRange(args,1,args.length);
+    static public String[] getArgs(String[] args) {
+        return Arrays.copyOfRange(args, 1, args.length);
     }
 
-    static public String[][] getArgs(String [][]args)
-    {
+    static public String[][] getArgs(String[][] args) {
         return Arrays.stream(args)
                 .map(CommandParser::getArgs)
                 .toList()
                 .toArray(new String[0][0]);
     }
 
-    static public String[][][] getArgs(String [][][]args)
-    {
+    static public String[][][] getArgs(String[][][] args) {
         return Arrays.stream(args)
                 .map(CommandParser::getArgs)
                 .toList()

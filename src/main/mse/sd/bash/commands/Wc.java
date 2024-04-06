@@ -1,4 +1,5 @@
 package mse.sd.bash.commands;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
@@ -20,15 +21,10 @@ public class Wc extends Command {
                 words += new StringTokenizer(line, " ").countTokens();
             }
             stringBuilder.append(String.format("%s %s %s %n", lines, words, bytes));
-            //System.out.printf("%s %s %s %s%n", lines, words, bytes, fileName);
-            //System.out.printf("%s %s %s %s%n", lines, words, bytes); ??
-            if(nextCommand != null)
-            {
+            if (nextCommand != null) {
                 nextCommand.eval(new StringReader(stringBuilder.toString()));
-            }
-            else
-            {
-                System.out.println(stringBuilder);
+            } else {
+                System.out.print(stringBuilder);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

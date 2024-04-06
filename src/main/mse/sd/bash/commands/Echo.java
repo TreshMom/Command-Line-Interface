@@ -7,19 +7,16 @@ public class Echo extends Command {
 
     @Override
     public void eval(Reader reader) throws IOException {
-        if(nextCommand != null)
-        {
+        if (nextCommand != null) {
             nextCommand.eval(reader);
-        }
-        else
-        {
+        } else {
             System.out.println(new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
         }
     }
 
     @Override
     public void start() throws IOException {
-        if(args.length > 0) {
+        if (args.length > 0) {
             eval(new StringReader(args[0]));
         }
     }

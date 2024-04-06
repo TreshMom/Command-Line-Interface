@@ -7,13 +7,11 @@ public class Parser {
     private Command[][] commands = null;
     private String[][][] commandsArgs = null;
 
-    public String[][][] getCommandsArgs()
-    {
+    public String[][][] getCommandsArgs() {
         return this.commandsArgs;
     }
 
-    public Command[][] getCommands()
-    {
+    public Command[][] getCommands() {
         return this.commands;
     }
 

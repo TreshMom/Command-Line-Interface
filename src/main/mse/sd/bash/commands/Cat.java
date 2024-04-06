@@ -1,7 +1,9 @@
 package mse.sd.bash.commands;
+
 import java.io.*;
 
 public class Cat extends Command {
+
     @Override
     public void eval(Reader reader) {
         StringBuilder result = new StringBuilder();
@@ -10,18 +12,17 @@ public class Cat extends Command {
             while ((line = BufReader.readLine()) != null) {
                 result.append(line).append("\n");
             }
-            if(nextCommand != null)
-            {
-                nextCommand.eval(new StringReader(result.toString()));
+            if (!result.isEmpty()) {
+                result.deleteCharAt(result.length() - 1);
             }
-            else
-            {
-                System.out.println(result);
+            if (nextCommand != null) {
+                nextCommand.eval(new StringReader(result.toString()));
+            } else {
+                System.out.print(result);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override

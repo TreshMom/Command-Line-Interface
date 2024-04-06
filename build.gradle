@@ -25,7 +25,10 @@ java {
         }
         test {
             java {
-                srcDirs = ["src/test"]
+                srcDirs = ["src/test/java"]
+            }
+            resources {
+                srcDirs = ["src/test/resources"]
             }
         }
     }

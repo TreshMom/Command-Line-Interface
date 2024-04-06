@@ -1,19 +1,19 @@
-package mse.sd.bash.commands;
+package mse.sd.bash.analyze;
+
+import mse.sd.bash.commands.Command;
 
 import java.io.IOException;
 
 public class PipeManagerCommands {
     private final Command[] commands;
-    public PipeManagerCommands(Command[] commands, String[][] args)
-    {
+
+    public PipeManagerCommands(Command[] commands, String[][] args) {
         this.commands = commands;
-        for (int i = 0;i < commands.length; i++)
-        {
+        for (int i = 0; i < commands.length; i++) {
             commands[i].setArgs(args[i]);
         }
 
-        for (int i = 0;i < commands.length - 1; i++)
-        {
+        for (int i = 0; i < commands.length - 1; i++) {
             commands[i].setNext(commands[i + 1]);
         }
     }
