@@ -1,4 +1,4 @@
-package commands;
+package details;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +22,6 @@ public class RealCommand {
             }
             process.waitFor();
             return output.toString();
-
         } catch (IOException | InterruptedException e) {
             System.out.println(e.getMessage());
             return null;

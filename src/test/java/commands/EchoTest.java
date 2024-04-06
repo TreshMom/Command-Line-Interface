@@ -10,8 +10,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CatTest {
-
+public class EchoTest {
     String[][] fileNames = new String[][]{
             new String[]{"./src/test/resources/cat_test_empty"},
             new String[]{"./src/test/resources/cat_test_only_line_delimiters"},

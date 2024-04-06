@@ -6,21 +6,23 @@ import java.util.StringTokenizer;
 
 public class Wc extends Command {
 
+    private String fileName;
+
     @Override
     public void eval(Reader reader) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(reader)) {
-            int lines = -1;
+            int lines = 0;
             int words = 0;
             int bytes = 0;
 
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 lines++;
-                bytes += line.getBytes(StandardCharsets.UTF_8).length; // проблемы
+                bytes += line.getBytes().length + 1;
                 words += new StringTokenizer(line, " ").countTokens();
             }
-            stringBuilder.append(String.format("%s %s %s %n", lines, words, bytes));
+            stringBuilder.append(String.format("%s %s %s %s", lines, words, bytes, fileName));
             if (nextCommand != null) {
                 nextCommand.eval(new StringReader(stringBuilder.toString()));
             } else {
@@ -31,11 +33,15 @@ public class Wc extends Command {
         }
     }
 
+    private boolean isLineSeparator(char ch) {
+        return ch == System.lineSeparator().charAt(0);
+    }
+
     @Override
     public void start() {
         try {
-            String filename = args[0];
-            eval(new FileReader(filename));
+            fileName = args[0];
+            eval(new FileReader(fileName));
         } catch (Exception e) {
             throw new IllegalArgumentException("error args");
         }
