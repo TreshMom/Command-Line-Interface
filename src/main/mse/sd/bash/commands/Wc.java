@@ -22,7 +22,7 @@ public class Wc extends Command {
                 bytes += line.getBytes().length + 1;
                 words += new StringTokenizer(line, " ").countTokens();
             }
-            stringBuilder.append(String.format("%s %s %s %s", lines, words, bytes, fileName));
+            stringBuilder.append(String.format("%s %s %s %s", lines, words - 1, bytes, fileName));
             if (nextCommand != null) {
                 nextCommand.eval(new StringReader(stringBuilder.toString()));
             } else {
