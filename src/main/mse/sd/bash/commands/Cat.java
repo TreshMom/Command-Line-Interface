@@ -3,7 +3,13 @@ package mse.sd.bash.commands;
 import java.io.*;
 
 public class Cat extends Command {
-
+    /**
+     * Evaluates the command, reading from the provided reader.
+     * Concatenates all lines into a single string and prints the result.
+     * If the next command in the chain is not null, passes the result to it.
+     *
+     * @param reader The reader to read from.
+     */
     @Override
     public void eval(Reader reader) {
         StringBuilder result = new StringBuilder();
@@ -25,6 +31,11 @@ public class Cat extends Command {
         }
     }
 
+    /**
+     * Starts the execution of the command.
+     * Reads the filename from the arguments and evaluates the command.
+     * Throws an IllegalArgumentException if no filename is provided.
+     */
     @Override
     public void start() {
         try {
@@ -35,6 +46,11 @@ public class Cat extends Command {
         }
     }
 
+    /**
+     * Returns a new instance of the Cat command.
+     *
+     * @return A new instance of the Cat command.
+     */
     @Override
     public Cat getNew() {
         return new Cat();
