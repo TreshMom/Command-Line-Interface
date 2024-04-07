@@ -4,12 +4,12 @@ import java.io.*;
 import java.nio.file.*;
 
 public class Cd extends Command {
+    public String newCwd = null;
 
     @Override
     public void eval(Reader reader) throws IOException {
         try (BufferedReader bufferedReader = new BufferedReader(reader)) {
-            // bad
-            System.setProperty("user.dir", bufferedReader.readLine());
+            newCwd = Paths.get(bufferedReader.readLine()).normalize().toString();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -18,15 +18,19 @@ public class Cd extends Command {
     @Override
     public void start() throws IOException {
         if (args.length == 0) {
-            System.out.println(System.getProperty("user.dir"));
+            System.out.println(cwd);
             return;
         }
         try {
             Path inputPath = Paths.get(args[0]);
-            eval(new StringReader(inputPath.toAbsolutePath()
-                                           .normalize()
-                                           .toString()
-            ));
+            if (!inputPath.isAbsolute()) {
+                inputPath = Paths.get(cwd).resolve(inputPath);
+            }
+            File f = inputPath.toFile();
+            if (!f.exists() || !f.isDirectory()) {
+                throw new IllegalArgumentException();
+            }
+            eval(new StringReader(inputPath.toString()));
         } catch (Exception e) {
             throw new IllegalArgumentException("error args");
         }
