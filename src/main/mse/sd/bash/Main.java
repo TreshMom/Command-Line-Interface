@@ -5,6 +5,7 @@ import mse.sd.bash.commands.Command;
 import mse.sd.bash.analyze.PipeManagerCommands;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Scanner;
 
 public class Main {

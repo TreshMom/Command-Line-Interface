@@ -16,6 +16,7 @@ public class CommandParser {
         CMD_MAP.put("exit", new Exit());
         CMD_MAP.put("pwd", new Pwd());
         CMD_MAP.put("wc", new Wc());
+        CMD_MAP.put("grep", new Grep());
     }
 
     static private boolean isCommand(String[] str) {
