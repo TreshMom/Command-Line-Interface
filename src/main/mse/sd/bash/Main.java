@@ -13,8 +13,10 @@ public class Main {
         while (true) {
             Scanner sc = new Scanner(System.in);
             try {
-                run(sc.nextLine());
-                System.out.print("MyBash> ");
+                if (sc.hasNextLine()) {
+                    run(sc.nextLine());
+                    System.out.print("MyBash> ");
+                }
             } catch (IOException | IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }

@@ -3,6 +3,10 @@ plugins {
     id 'application'
 }
 
+application {
+    mainClass = 'mse.sd.bash.Main'
+}
+
 group = "mse.sd.bash.analyze"
 version = "1.0-SNAPSHOT"
 

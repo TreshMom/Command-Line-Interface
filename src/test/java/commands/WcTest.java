@@ -18,7 +18,7 @@ public class WcTest {
     };
 
     @Test
-    void catTest() {
+    void wcTest() {
         try {
             Command command = new Wc();
             for (String[] fileName : fileNames) {

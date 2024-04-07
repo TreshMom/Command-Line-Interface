@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PwdTest {
     @Test
-    public void testPwd() {
+    public void pwdTest() {
         try {
             OutputStreamWrapper.setUpStreams();
             Pwd pwd = new Pwd();

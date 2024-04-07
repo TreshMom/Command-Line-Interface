@@ -2,33 +2,26 @@ package commands;
 
 import details.OutputStreamWrapper;
 import details.RealCommand;
-import mse.sd.bash.commands.Cat;
 import mse.sd.bash.commands.Command;
+import mse.sd.bash.commands.Echo;
+import java.util.List;
 import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EchoTest {
-    String[][] fileNames = new String[][]{
-            new String[]{"./src/test/resources/cat_test_empty"},
-            new String[]{"./src/test/resources/cat_test_only_line_delimiters"},
-            new String[]{"./src/test/resources/cat_test_some_text"},
-            new String[]{"./src/test/resources/cat_test_strange_formatting"}
-    };
 
     @Test
-    void catTest() {
+    void echoTest() {
         try {
-            Command command = new Cat();
-            for (String[] fileName : fileNames) {
-                OutputStreamWrapper.setUpStreams();
-                command.setArgs(fileName);
-                command.start();
-                String expectedOutput = RealCommand.eval("cat " + fileName[0]);
-                assertEquals(expectedOutput, OutputStreamWrapper.getOutContent());
-            }
+            String[] someText = new String[]{"12n ekn;alkn ;1nnd jkn n12e?>@!#!@$%T^$*@!)_#(@_)#"};
+            Command command = new Echo();
+            OutputStreamWrapper.setUpStreams();
+            command.setArgs(someText);
+            command.start();
+            String expectedOutput = RealCommand.eval("echo " + someText[0]);
+            assertEquals(expectedOutput, OutputStreamWrapper.getOutContent());
             OutputStreamWrapper.restoreStreams();
         } catch (IOException e) {
             System.out.println(e.getMessage());

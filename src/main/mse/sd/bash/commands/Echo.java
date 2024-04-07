@@ -10,7 +10,7 @@ public class Echo extends Command {
         if (nextCommand != null) {
             nextCommand.eval(reader);
         } else {
-            System.out.println(new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
+            System.out.print(new BufferedReader(reader).lines().collect(Collectors.joining("\n")));
         }
     }
 
