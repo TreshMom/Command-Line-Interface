@@ -7,6 +7,8 @@ import mse.sd.bash.commands.Wc;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,7 +29,9 @@ public class WcTest {
                 command.start();
                 String expectedOutput = String.join(
                         " ",
-                        RealCommand.eval("wc " + fileName[0]).strip().split("\\s+")
+                        Objects.requireNonNull(
+                                RealCommand.eval(Collections.singletonList("wc " + fileName[0]))
+                        ).strip().split("\\s+")
                 );
                 assertEquals(expectedOutput, OutputStreamWrapper.getOutContent());
             }

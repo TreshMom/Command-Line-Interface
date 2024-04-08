@@ -7,6 +7,7 @@ import mse.sd.bash.commands.Command;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,7 +28,7 @@ public class CatTest {
                 OutputStreamWrapper.setUpStreams();
                 command.setArgs(fileName);
                 command.start();
-                String expectedOutput = RealCommand.eval("cat " + fileName[0]);
+                String expectedOutput = RealCommand.eval(Collections.singletonList("cat " + fileName[0]));
                 assertEquals(expectedOutput, OutputStreamWrapper.getOutContent());
             }
             OutputStreamWrapper.restoreStreams();

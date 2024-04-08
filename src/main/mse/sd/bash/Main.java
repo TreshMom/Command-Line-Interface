@@ -28,12 +28,12 @@ public class Main {
             } catch (IOException | IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
-            System.out.print("MyBash> ");
+            System.out.print(System.lineSeparator() + "MyBash> ");
         }
     }
 
     static Parser parser = new Parser();
-    private static void run(String rs) throws IOException, IllegalArgumentException {
+    public static void run(String rs) throws IOException, IllegalArgumentException {
         parser.clear();
         parser.setSource(rs);
         parser.parse();

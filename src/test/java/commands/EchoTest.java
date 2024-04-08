@@ -4,6 +4,8 @@ import details.OutputStreamWrapper;
 import details.RealCommand;
 import mse.sd.bash.commands.Command;
 import mse.sd.bash.commands.Echo;
+
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import java.io.IOException;
@@ -20,7 +22,7 @@ public class EchoTest {
             OutputStreamWrapper.setUpStreams();
             command.setArgs(someText);
             command.start();
-            String expectedOutput = RealCommand.eval("echo " + someText[0]);
+            String expectedOutput = RealCommand.eval(Collections.singletonList("echo " + someText[0]));
             assertEquals(expectedOutput, OutputStreamWrapper.getOutContent());
             OutputStreamWrapper.restoreStreams();
         } catch (IOException e) {

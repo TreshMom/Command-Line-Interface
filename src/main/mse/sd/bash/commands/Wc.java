@@ -30,7 +30,11 @@ public class Wc extends Command {
                 bytes += line.getBytes().length + 1;
                 words += new StringTokenizer(line, " ").countTokens();
             }
-            stringBuilder.append(String.format("%s %s %s %s", lines, words, bytes, fileName));
+            if (fileName != null) {
+                stringBuilder.append(String.format("%s %s %s %s", lines, words, bytes, fileName));
+            } else {
+                stringBuilder.append(String.format("%s %s %s", lines, words, bytes));
+            }
             if (nextCommand != null) {
                 nextCommand.eval(new StringReader(stringBuilder.toString()));
             } else {
