@@ -7,7 +7,7 @@ import java.io.StringReader;
 public class Pwd extends Command {
     @Override
     public void eval(Reader reader) throws IOException {
-        String result = System.getProperty("user.dir");
+        String result = cwd;
         if(nextCommand != null)
         {
             nextCommand.eval(new StringReader(result));

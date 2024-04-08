@@ -2,6 +2,7 @@ package mse.sd.bash.commands;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
+import java.nio.file.*;
 
 public class Wc extends Command {
 
@@ -38,8 +39,15 @@ public class Wc extends Command {
     @Override
     public void start() {
         try {
-            String filename = args[0];
-            eval(new FileReader(filename));
+            Path inputPath = Paths.get(args[0]);
+            if (!inputPath.isAbsolute()) {
+                inputPath = Paths.get(cwd).resolve(inputPath);
+            }
+            File f = inputPath.toFile();
+            if (!f.exists() || f.isDirectory()) {
+                throw new IllegalArgumentException();
+            }
+            eval(new FileReader(f));
         } catch (Exception e) {
             throw new IllegalArgumentException("error args");
         }

@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class PipeManagerCommands {
     private final Command[] commands;
-    public PipeManagerCommands(Command[] commands, String[][] args)
+    public PipeManagerCommands(Command[] commands, String[][] args, String cwd)
     {
         this.commands = commands;
         for (int i = 0;i < commands.length; i++)
@@ -15,6 +15,11 @@ public class PipeManagerCommands {
         for (int i = 0;i < commands.length - 1; i++)
         {
             commands[i].setNext(commands[i + 1]);
+        }
+
+        for (int i = 0;i < commands.length; i++)
+        {
+            commands[i].setCWD(cwd);
         }
     }
 
