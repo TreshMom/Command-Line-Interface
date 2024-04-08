@@ -21,21 +21,17 @@ public class PipesTest {
     @Test
     void pipesTest() {
         try {
-
-            List<String> command = List.of(
-                    "wc ./src/test/resources/wc_test_some_text",
-                    "cat"
-            );
             OutputStreamWrapper.setUpStreams();
-
-            Main.run(command.stream().reduce((x, y) -> x + " | " + y).get());
-            String expectedOutput = String.join(
-                    " ",
-                    Objects.requireNonNull(RealCommand.eval(command)).strip().split("\\s+")
-            );
-            assertEquals(expectedOutput, OutputStreamWrapper.getOutContent());
+            for (List<String> command : generateCommands()) {
+                System.err.println(command.stream().reduce((x, y) -> x + " | " + y).get());
+                Main.run(command.stream().reduce((x, y) -> x + " | " + y).get());
+                String expectedOutput = String.join(
+                        " ",
+                        Objects.requireNonNull(RealCommand.eval(command)).strip().split("\\s+")
+                );
+                assertEquals(expectedOutput, OutputStreamWrapper.getOutContent());
+            }
             OutputStreamWrapper.restoreStreams();
-
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -44,8 +40,31 @@ public class PipesTest {
     private List<List<String>> generateCommands() {
         List<List<String>> result = new ArrayList<>();
         List<String> fileNames = List.of(
-
+                "./src/test/resources/grep_test_repetitive",
+                "./src/test/resources/wc_test_some_text",
+                "./src/test/resources/grep_test_all_min",
+                "./src/test/resources/cat_test_empty"
         );
+        List<String> commands = List.of(
+                "wc", "cat"
+//                "grep"
+        );
+        List<String> regexForGrep = List.of(
+                "над", "минимальный"
+        );
+
+        for (String fileName : fileNames) {
+            for (String command : commands) {
+                List<String> cmd = new ArrayList<>();
+                cmd.add(command + " " + fileName);
+                for (String otherCommand : commands) {
+                    if (!otherCommand.equals(command)) {
+                        cmd.add(otherCommand);
+                    }
+                }
+                result.add(cmd);
+            }
+        }
 
         return result;
     }

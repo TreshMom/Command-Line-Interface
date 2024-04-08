@@ -41,7 +41,7 @@ public class Grep extends Command {
      * Evaluates the command, reading input from the provided reader.
      * Matches lines against the regular expression, prints matched lines, and optionally prints additional lines after each match.
      * If the next command in the chain is not null, passes the result to it.
-     * 
+     *
      * @param reader The reader to read input from.
      * @throws IOException If an I/O error occurs.
      */
@@ -78,13 +78,13 @@ public class Grep extends Command {
     /**
      * Starts the execution of the command.
      * Reads the file name and command line arguments, and evaluates the command.
-     * 
+     *
      * @throws IOException If an I/O error occurs.
      */
     @Override
     public void start() throws IOException {
         String fileName = null;
-        for (int i = 0; i < args.length; i ++) {
+        for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-w")) {
                 wholeWord = true;
             } else if (args[i].equals("-i")) {
@@ -105,10 +105,10 @@ public class Grep extends Command {
         }
         eval(new FileReader(fileName, StandardCharsets.UTF_8));
     }
-    
+
     /**
      * Returns a new instance of the Grep command.
-     * 
+     *
      * @return A new instance of the Grep command.
      */
     @Override
