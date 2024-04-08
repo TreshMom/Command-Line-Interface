@@ -7,7 +7,15 @@ import java.util.StringTokenizer;
 public class Wc extends Command {
 
     private String fileName;
-
+    
+    /**
+     * Evaluates the command, reading input from the provided reader.
+     * Counts the number of lines, words, and bytes in the input.
+     * If the next command in the chain is not null, passes the result to it.
+     * Otherwise, prints the result to the standard output.
+     *
+     * @param reader The reader to read input from.
+     */
     @Override
     public void eval(Reader reader) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -37,6 +45,12 @@ public class Wc extends Command {
         return ch == System.lineSeparator().charAt(0);
     }
 
+    /**
+     * Starts the execution of the command.
+     * Reads the filename from the arguments and evaluates the command.
+     *
+     * @throws IllegalArgumentException If the filename is not provided.
+     */
     @Override
     public void start() {
         try {
@@ -46,7 +60,12 @@ public class Wc extends Command {
             throw new IllegalArgumentException("error args");
         }
     }
-
+    
+    /**
+     * Returns a new instance of the Wc command.
+     *
+     * @return A new instance of the Wc command.
+     */
     @Override
     public Command getNew() {
         return new Wc();

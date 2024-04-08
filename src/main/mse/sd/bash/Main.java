@@ -5,9 +5,18 @@ import mse.sd.bash.commands.Command;
 import mse.sd.bash.analyze.PipeManagerCommands;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Scanner;
 
 public class Main {
+    
+    /**
+     * Main method of the MyBash application.
+     * Prompts the user with "MyBash> ", reads input from the console, and processes commands.
+     * Continuously runs until the program is terminated.
+     * 
+     * @param args Command-line arguments (not used).
+     */
     public static void main(String[] args) throws IllegalArgumentException {
         System.out.print("MyBash> ");
         while (true) {
