@@ -68,7 +68,7 @@ public class Grep extends Command {
             if (nextCommand != null) {
                 nextCommand.eval(new StringReader(result.toString()));
             } else {
-                System.out.println(result);
+                System.out.print(result);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
