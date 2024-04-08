@@ -42,7 +42,7 @@ public class Grep extends Command {
      * Evaluates the command, reading input from the provided reader.
      * Matches lines against the regular expression, prints matched lines, and optionally prints additional lines after each match.
      * If the next command in the chain is not null, passes the result to it.
-     * 
+     *
      * @param reader The reader to read input from.
      * @throws IOException If an I/O error occurs.
      */
@@ -52,7 +52,9 @@ public class Grep extends Command {
         try (BufferedReader bufReader = new BufferedReader(reader)) {
             String line;
             regex = wholeWord ? String.format("\\b%s\\b", regex) : regex;
-            Pattern pattern = ignoreCase ? Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS) : Pattern.compile(regex, Pattern.UNICODE_CHARACTER_CLASS);
+            Pattern pattern = ignoreCase ? Pattern.compile(regex,
+                    Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS) :
+                    Pattern.compile(regex, Pattern.UNICODE_CHARACTER_CLASS);
             while ((line = bufReader.readLine()) != null) {
                 Matcher matcher = pattern.matcher(line);
                 boolean found = false;
@@ -66,6 +68,8 @@ public class Grep extends Command {
                     }
                 }
             }
+            linesAfterMatch = 0;
+            customLinePrint = false;
             if (!result.isEmpty()) {
                 result.deleteCharAt(result.length() - 1);
             }
@@ -82,13 +86,13 @@ public class Grep extends Command {
     /**
      * Starts the execution of the command.
      * Reads the file name and command line arguments, and evaluates the command.
-     * 
+     *
      * @throws IOException If an I/O error occurs.
      */
     @Override
     public void start() throws IOException {
         String fileName = null;
-        for (int i = 0; i < args.length; i ++) {
+        for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-w")) {
                 wholeWord = true;
             } else if (args[i].equals("-i")) {
@@ -107,13 +111,13 @@ public class Grep extends Command {
                 fileName = args[i];
             }
         }
-        System.err.println(Arrays.toString(args));
+        System.err.println(linesAfterMatch);
         eval(new FileReader(fileName, StandardCharsets.UTF_8));
     }
-    
+
     /**
      * Returns a new instance of the Grep command.
-     * 
+     *
      * @return A new instance of the Grep command.
      */
     @Override
