@@ -32,7 +32,7 @@ public class Grep extends Command {
             }
             result.append(nextLine).append("\n");
             if (innerFound) {
-                innerLoop(lines - 1, bufReader, pattern, result);
+                innerLoop(lines, bufReader, pattern, result);
                 break;
             }
         }
@@ -70,6 +70,8 @@ public class Grep extends Command {
             }
             linesAfterMatch = 0;
             customLinePrint = false;
+            wholeWord = false;
+            ignoreCase = false;
             if (!result.isEmpty()) {
                 result.deleteCharAt(result.length() - 1);
             }
@@ -111,7 +113,7 @@ public class Grep extends Command {
                 fileName = args[i];
             }
         }
-        System.err.println(linesAfterMatch);
+//        System.err.println(linesAfterMatch);
         eval(new FileReader(fileName, StandardCharsets.UTF_8));
     }
 
