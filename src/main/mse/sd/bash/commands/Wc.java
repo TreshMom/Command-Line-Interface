@@ -45,10 +45,6 @@ public class Wc extends Command {
         }
     }
 
-    private boolean isLineSeparator(char ch) {
-        return ch == System.lineSeparator().charAt(0);
-    }
-
     /**
      * Starts the execution of the command.
      * Reads the filename from the arguments and evaluates the command.

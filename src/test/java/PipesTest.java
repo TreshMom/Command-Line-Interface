@@ -1,15 +1,10 @@
-package commands;
-
 import details.OutputStreamWrapper;
 import details.RealCommand;
-import mse.sd.bash.commands.Cat;
-import mse.sd.bash.commands.Command;
 import org.junit.jupiter.api.Test;
 import mse.sd.bash.Main;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,7 +18,6 @@ public class PipesTest {
         try {
             OutputStreamWrapper.setUpStreams();
             for (List<String> command : generateCommands()) {
-                System.err.println(command.stream().reduce((x, y) -> x + " | " + y).get());
                 Main.run(command.stream().reduce((x, y) -> x + " | " + y).get());
                 String expectedOutput = String.join(
                         " ",
@@ -46,26 +40,44 @@ public class PipesTest {
                 "./src/test/resources/cat_test_empty"
         );
         List<String> commands = List.of(
-                "wc", "cat"
-//                "grep"
+                "wc", "cat",
+                "grep"
         );
         List<String> regexForGrep = List.of(
-                "над", "минимальный"
+                "Минимальный", "минимальный",
+                "Минимал", "минимал",
+                "минимальный$", "^минимальный",
+                "1", "2", "3", "4", "5", "6", "7", "8", "9"
         );
 
         for (String fileName : fileNames) {
             for (String command : commands) {
                 List<String> cmd = new ArrayList<>();
-                cmd.add(command + " " + fileName);
+                int index = (int) (Math.random() * (regexForGrep.size()));
+                String regex = regexForGrep.get(index);
+                if (Objects.equals(command, "grep")) {
+                    cmd.add(command + " " + regex + " " + fileName);
+                } else {
+                    cmd.add(command + " " + fileName);
+                }
                 for (String otherCommand : commands) {
                     if (!otherCommand.equals(command)) {
-                        cmd.add(otherCommand);
+                        if (Objects.equals(otherCommand, "grep")) {
+                            index = (int) (Math.random() * (regexForGrep.size()));
+                            regex = regexForGrep.get(index);
+                            cmd.add(otherCommand + " " + regex + " ");
+                        } else {
+                            cmd.add(otherCommand);
+                        }
                     }
                 }
+
                 result.add(cmd);
             }
         }
 
         return result;
     }
+
+
 }

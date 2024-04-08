@@ -2,6 +2,7 @@ package mse.sd.bash.commands;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,7 +32,7 @@ public class Grep extends Command {
             }
             result.append(nextLine).append("\n");
             if (innerFound) {
-                innerLoop(lines - 1, bufReader, pattern, result);
+                innerLoop(lines, bufReader, pattern, result);
                 break;
             }
         }
@@ -47,11 +48,16 @@ public class Grep extends Command {
      */
     @Override
     public void eval(Reader reader) throws IOException {
+        if (args.length != 0) {
+            regex = args[0];
+        }
         StringBuilder result = new StringBuilder();
         try (BufferedReader bufReader = new BufferedReader(reader)) {
             String line;
             regex = wholeWord ? String.format("\\b%s\\b", regex) : regex;
-            Pattern pattern = ignoreCase ? Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS) : Pattern.compile(regex, Pattern.UNICODE_CHARACTER_CLASS);
+            Pattern pattern = ignoreCase ? Pattern.compile(regex,
+                    Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS) :
+                    Pattern.compile(regex, Pattern.UNICODE_CHARACTER_CLASS);
             while ((line = bufReader.readLine()) != null) {
                 Matcher matcher = pattern.matcher(line);
                 boolean found = false;
@@ -64,6 +70,13 @@ public class Grep extends Command {
                         innerLoop(linesAfterMatch, bufReader, pattern, result);
                     }
                 }
+            }
+            linesAfterMatch = 0;
+            customLinePrint = false;
+            wholeWord = false;
+            ignoreCase = false;
+            if (!result.isEmpty()) {
+                result.deleteCharAt(result.length() - 1);
             }
             if (nextCommand != null) {
                 nextCommand.eval(new StringReader(result.toString()));
@@ -91,7 +104,7 @@ public class Grep extends Command {
                 ignoreCase = true;
             } else if (args[i].equals("-A")) {
                 customLinePrint = true;
-            } else if (customLinePrint && linesAfterMatch == 0) {
+            } else if (customLinePrint == true && linesAfterMatch == 0) {
                 try {
                     linesAfterMatch = Integer.parseInt(args[i]);
                 } catch (NumberFormatException e) {
@@ -103,6 +116,7 @@ public class Grep extends Command {
                 fileName = args[i];
             }
         }
+//        System.err.println(linesAfterMatch);
         eval(new FileReader(fileName, StandardCharsets.UTF_8));
     }
 
