@@ -2,6 +2,8 @@ package mse.sd.bash.commands;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +23,7 @@ public class Grep extends Command {
                 System.err.println(e);
             }
             if (nextLine == null) {
-                return;
+                break;
             }
             Matcher innerMatcher = pattern.matcher(nextLine);
             boolean innerFound = false;
@@ -33,26 +35,6 @@ public class Grep extends Command {
                 innerLoop(lines, bufReader, pattern, result);
                 break;
             }
-        }
-        String nLine = null;
-        try {
-            nLine = bufReader.readLine();
-        } catch (IOException e) {
-            System.err.println(e);
-        }
-        if (nLine == null) {
-            return;
-        }
-        Matcher m = pattern.matcher(nLine);
-        boolean f = false;
-        if (m.find()) {
-            f = true;
-        }
-        if (f) {
-            result.append(nLine).append("\n");
-            innerLoop(lines, bufReader, pattern, result);
-        } else {
-            result.append("--\n");
         }
     }
 
@@ -66,6 +48,9 @@ public class Grep extends Command {
      */
     @Override
     public void eval(Reader reader) throws IOException {
+        if (args.length != 0) {
+            regex = args[0];
+        }
         StringBuilder result = new StringBuilder();
         try (BufferedReader bufReader = new BufferedReader(reader)) {
             String line;
@@ -92,10 +77,6 @@ public class Grep extends Command {
             ignoreCase = false;
             if (!result.isEmpty()) {
                 result.deleteCharAt(result.length() - 1);
-                String stringResult = result.toString();
-                if (stringResult.endsWith("--")) {
-                    result.setLength(result.length() - 3);
-                }
             }
             if (nextCommand != null) {
                 nextCommand.eval(new StringReader(result.toString()));
