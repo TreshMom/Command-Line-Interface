@@ -32,16 +32,19 @@ public class Main {
         }
     }
 
+    static Parser parser = new Parser();
     private static void run(String rs) throws IOException, IllegalArgumentException {
-        Parser parser = new Parser(rs);
+        parser.setSource(rs);
         parser.parse();
-        Command[][] commands = parser.getCommands();
-        String[][][] commandsArgs = parser.getCommandsArgs();
+        if(parser.getCommands() != null) {
+            Command[][] commands = parser.getCommands();
+            String[][][] commandsArgs = parser.getCommandsArgs();
 
-        for (int i = 0; i < commands.length; i++) {
-            PipeManagerCommands pipeManagerCommands =
-                    new PipeManagerCommands(commands[i], commandsArgs[i]);
-            pipeManagerCommands.start();
+            for (int i = 0; i < commands.length; i++) {
+                PipeManagerCommands pipeManagerCommands =
+                        new PipeManagerCommands(commands[i], commandsArgs[i]);
+                pipeManagerCommands.start();
+            }
         }
     }
 }
