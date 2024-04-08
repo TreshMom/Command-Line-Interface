@@ -34,7 +34,7 @@ public class Wc extends Command {
             if (nextCommand != null) {
                 nextCommand.eval(new StringReader(stringBuilder.toString()));
             } else {
-                System.out.print(stringBuilder);
+                System.out.println(stringBuilder);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

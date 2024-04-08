@@ -24,16 +24,17 @@ public class Main {
             try {
                 if (sc.hasNextLine()) {
                     run(sc.nextLine());
-                    System.out.print("MyBash> ");
                 }
             } catch (IOException | IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
+            System.out.print("MyBash> ");
         }
     }
 
     static Parser parser = new Parser();
     private static void run(String rs) throws IOException, IllegalArgumentException {
+        parser.clear();
         parser.setSource(rs);
         parser.parse();
         if(parser.getCommands() != null) {

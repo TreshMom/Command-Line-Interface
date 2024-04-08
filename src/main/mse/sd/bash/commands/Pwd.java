@@ -19,7 +19,7 @@ public class Pwd extends Command {
         if (nextCommand != null) {
             nextCommand.eval(new StringReader(result));
         } else {
-            System.out.print(result);
+            System.out.println(result);
         }
     }
 

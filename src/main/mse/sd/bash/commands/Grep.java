@@ -68,7 +68,7 @@ public class Grep extends Command {
             if (nextCommand != null) {
                 nextCommand.eval(new StringReader(result.toString()));
             } else {
-                System.out.print(result);
+                System.out.println(result);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -91,7 +91,7 @@ public class Grep extends Command {
                 ignoreCase = true;
             } else if (args[i].equals("-A")) {
                 customLinePrint = true;
-            } else if (customLinePrint == true && linesAfterMatch == 0) {
+            } else if (customLinePrint && linesAfterMatch == 0) {
                 try {
                     linesAfterMatch = Integer.parseInt(args[i]);
                 } catch (NumberFormatException e) {

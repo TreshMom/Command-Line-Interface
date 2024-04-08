@@ -123,8 +123,13 @@ public class Parser {
                 .toArray(new String[0][0][0]);
     }
 
-    public static void main(String[] args){
-        String ls = "cat 'f f ff f f f '";
+    public void clear()
+    {
+        this.source = null;
+        this.commands = null;
+        this.commandsArgs = null;
+    }
 
+    public static void main(String[] args){
     }
 }
