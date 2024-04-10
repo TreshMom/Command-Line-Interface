@@ -2,8 +2,6 @@ package mse.sd.bash.commands;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +21,7 @@ public class Grep extends Command {
                 System.err.println(e);
             }
             if (nextLine == null) {
-                break;
+                return;
             }
             Matcher innerMatcher = pattern.matcher(nextLine);
             boolean innerFound = false;
@@ -35,6 +33,26 @@ public class Grep extends Command {
                 innerLoop(lines, bufReader, pattern, result);
                 break;
             }
+        }
+        String nLine = null;
+        try {
+            nLine = bufReader.readLine();
+        } catch (IOException e) {
+            System.err.println(e);
+        }
+        if (nLine == null) {
+            return;
+        }
+        Matcher m = pattern.matcher(nLine);
+        boolean f = false;
+        if (m.find()) {
+            f = true;
+        }
+        if (f) {
+            result.append(nLine).append("\n");
+            innerLoop(lines, bufReader, pattern, result);
+        } else {
+            result.append("--\n");
         }
     }
 
