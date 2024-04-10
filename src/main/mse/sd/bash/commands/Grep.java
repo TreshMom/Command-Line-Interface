@@ -92,6 +92,10 @@ public class Grep extends Command {
             ignoreCase = false;
             if (!result.isEmpty()) {
                 result.deleteCharAt(result.length() - 1);
+                String stringResult = result.toString();
+                if (stringResult.endsWith("--")) {
+                    result.setLength(result.length() - 3);
+                }
             }
             if (nextCommand != null) {
                 nextCommand.eval(new StringReader(result.toString()));
