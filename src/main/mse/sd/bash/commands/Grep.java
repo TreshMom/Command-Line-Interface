@@ -2,8 +2,6 @@ package mse.sd.bash.commands;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +11,29 @@ public class Grep extends Command {
     private boolean customLinePrint = false;
     private int linesAfterMatch = 0;
     private String regex;
+    private String fileName;
+
+    private void parseInput() {
+        for (String arg : args) {
+            if (arg.equals("-w")) {
+                wholeWord = true;
+            } else if (arg.equals("-i")) {
+                ignoreCase = true;
+            } else if (arg.equals("-A")) {
+                customLinePrint = true;
+            } else if (customLinePrint && linesAfterMatch == 0) {
+                try {
+                    linesAfterMatch = Integer.parseInt(arg);
+                } catch (NumberFormatException e) {
+                    linesAfterMatch = (int) Math.round(Double.parseDouble(arg));
+                }
+            } else if (arg.matches("\".*?\"")) {
+                regex = arg.substring(1, arg.length() - 1);
+            } else {
+                fileName = arg;
+            }
+        }
+    }
 
     private void innerLoop(int lines, BufferedReader bufReader, Pattern pattern, StringBuilder result) {
         for (int i = 0; i < lines; i++) {
@@ -23,18 +44,32 @@ public class Grep extends Command {
                 System.err.println(e);
             }
             if (nextLine == null) {
-                break;
+                return;
             }
             Matcher innerMatcher = pattern.matcher(nextLine);
-            boolean innerFound = false;
-            if (innerMatcher.find()) {
-                innerFound = true;
-            }
+            boolean innerFound = innerMatcher.find();
             result.append(nextLine).append("\n");
             if (innerFound) {
                 innerLoop(lines, bufReader, pattern, result);
                 break;
             }
+        }
+        String nLine = null;
+        try {
+            nLine = bufReader.readLine();
+        } catch (IOException e) {
+            System.err.println(e);
+        }
+        if (nLine == null) {
+            return;
+        }
+        Matcher m = pattern.matcher(nLine);
+        boolean f = m.find();
+        if (f) {
+            result.append(nLine).append("\n");
+            innerLoop(lines, bufReader, pattern, result);
+        } else {
+            result.append("--\n");
         }
     }
 
@@ -48,9 +83,7 @@ public class Grep extends Command {
      */
     @Override
     public void eval(Reader reader) throws IOException {
-        if (args.length != 0) {
-            regex = args[0];
-        }
+        parseInput();
         StringBuilder result = new StringBuilder();
         try (BufferedReader bufReader = new BufferedReader(reader)) {
             String line;
@@ -60,10 +93,7 @@ public class Grep extends Command {
                     Pattern.compile(regex, Pattern.UNICODE_CHARACTER_CLASS);
             while ((line = bufReader.readLine()) != null) {
                 Matcher matcher = pattern.matcher(line);
-                boolean found = false;
-                if (matcher.find()) {
-                    found = true;
-                }
+                boolean found = matcher.find();
                 if (found) {
                     result.append(line).append("\n");
                     if (customLinePrint && linesAfterMatch > 0) {
@@ -77,6 +107,9 @@ public class Grep extends Command {
             ignoreCase = false;
             if (!result.isEmpty()) {
                 result.deleteCharAt(result.length() - 1);
+                while (result.toString().endsWith("--")) {
+                    result.setLength(result.length() - 3);
+                }
             }
             if (nextCommand != null) {
                 nextCommand.eval(new StringReader(result.toString()));
@@ -96,26 +129,7 @@ public class Grep extends Command {
      */
     @Override
     public void start() throws IOException {
-        String fileName = null;
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("-w")) {
-                wholeWord = true;
-            } else if (args[i].equals("-i")) {
-                ignoreCase = true;
-            } else if (args[i].equals("-A")) {
-                customLinePrint = true;
-            } else if (customLinePrint == true && linesAfterMatch == 0) {
-                try {
-                    linesAfterMatch = Integer.parseInt(args[i]);
-                } catch (NumberFormatException e) {
-                    linesAfterMatch = (int) Math.round(Double.parseDouble(args[i]));
-                }
-            } else if (args[i].matches("\".*?\"")) {
-                regex = args[i].substring(1, args[i].length() - 1);
-            } else {
-                fileName = args[i];
-            }
-        }
+        parseInput();
 //        System.err.println(linesAfterMatch);
         eval(new FileReader(fileName, StandardCharsets.UTF_8));
     }
