@@ -9,7 +9,8 @@ import java.nio.charset.Charset;
 import java.util.Scanner;
 
 public class Main {
-    
+    private static final Parser parser = new Parser();
+
     /**
      * Main method of the MyBash application.
      * Prompts the user with "MyBash> ", reads input from the console, and processes commands.
@@ -32,7 +33,11 @@ public class Main {
         }
     }
 
-    static Parser parser = new Parser();
+    /**
+     * Method run executes application with input string
+     *
+     * @param rs input string.
+     */
     public static void run(String rs) throws IOException, IllegalArgumentException {
         parser.clear();
         parser.setSource(rs);

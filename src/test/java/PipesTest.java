@@ -18,11 +18,18 @@ public class PipesTest {
         try {
             OutputStreamWrapper.setUpStreams();
             for (List<String> command : generateCommands()) {
-                Main.run(command.stream().reduce((x, y) -> x + " | " + y).get());
                 String expectedOutput = String.join(
                         " ",
                         Objects.requireNonNull(RealCommand.eval(command)).strip().split("\\s+")
                 );
+                for (int i = 0; i < command.size(); i++) {
+                    if (command.get(i).startsWith("grep")) {
+                        String[] gg = command.get(i).split("\\s+");
+                        gg[1] = "\"" + gg[1] + "\"";
+                        command.set(i, String.join(" ", gg));
+                    }
+                }
+                Main.run(command.stream().reduce((x, y) -> x + " | " + y).get());
                 assertEquals(expectedOutput, OutputStreamWrapper.getOutContent());
             }
             OutputStreamWrapper.restoreStreams();
@@ -47,7 +54,8 @@ public class PipesTest {
                 "Минимальный", "минимальный",
                 "Минимал", "минимал",
                 "минимальный$", "^минимальный",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9"
+                "1", "2", "3", "4", "5",
+                "6", "7", "8", "9"
         );
 
         for (String fileName : fileNames) {
@@ -65,7 +73,7 @@ public class PipesTest {
                         if (Objects.equals(otherCommand, "grep")) {
                             index = (int) (Math.random() * (regexForGrep.size()));
                             regex = regexForGrep.get(index);
-                            cmd.add(otherCommand + " " + regex + " ");
+                            cmd.add(otherCommand + " " + regex);
                         } else {
                             cmd.add(otherCommand);
                         }
@@ -75,9 +83,6 @@ public class PipesTest {
                 result.add(cmd);
             }
         }
-
         return result;
     }
-
-
 }

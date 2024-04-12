@@ -23,15 +23,12 @@ public class GrepTest {
             List<String> args = createArgs();
             for (String arg : args) {
                 OutputStreamWrapper.setUpStreams();
-//                System.err.println(arg);
                 String expectedOutput = RealCommand.eval(Collections.singletonList("grep " + arg));
                 String[] tmp = arg.split("\\s+");
                 tmp[tmp.length - 2] = '"' + tmp[tmp.length - 2] + '"';
-                System.err.println(Arrays.toString(tmp));
                 command.setArgs(tmp);
                 command.start();
                 String result = OutputStreamWrapper.getOutContent();
-                System.err.println(result);
                 assertEquals(expectedOutput, result);
             }
             OutputStreamWrapper.restoreStreams();
@@ -69,7 +66,6 @@ public class GrepTest {
                 }
             }
         }
-//        System.err.println(Arrays.toString(args.toArray()));
         return args;
     }
 
